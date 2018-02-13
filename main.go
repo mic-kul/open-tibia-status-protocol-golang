@@ -4,6 +4,7 @@ import (
     "fmt"
     "io/ioutil"
     "net"
+    "time"
     "os"
 )
 
@@ -17,6 +18,10 @@ func main() {
     checkError(err)
     conn, err := net.DialTCP("tcp", nil, tcpAddr)
     checkError(err)
+    timeoutDuration := time.Now().Add(5 * time.Second)
+    conn.SetDeadline(timeoutDuration)
+    conn.SetReadDeadline(timeoutDuration)
+    conn.SetWriteDeadline(timeoutDuration)
     var msg = []byte{0x06, 0x00, 0xFF, 0xFF, 0x69, 0x6E, 0x66, 0x6F}
     _, err = conn.Write(msg[:])
     checkError(err)
